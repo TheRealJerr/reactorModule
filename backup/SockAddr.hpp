@@ -1,5 +1,5 @@
 #pragma once
-// 这个头文件是对struct sockaddr_in的封装，主要是为了方便使用，可以直接通过ip和端口号来初始化sockaddr_in，也可以通过sockaddr_in来获取ip和端口号。
+
 #include <iostream>
 #include <string>
 #include <sys/types.h>
