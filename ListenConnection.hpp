@@ -52,7 +52,10 @@ namespace ListenConnection
                 if(newfd > 0)
                 {
                     // 将新的连接封装填写进入reactor模型中
+                    NON_BLOCKING(newfd); // 设置新的连接为非阻塞
                     auto con = std::make_shared<IOConnectionModule::IOConnection>(newfd);
+                    // 设置读取2025年3月17日12:14:09
+                    con->setEvents(EPOLLIN);
                     con->setOwner(getOwner());
                     // 添加进入
                     getOwner()->addNewConnection(con);
@@ -79,7 +82,7 @@ namespace ListenConnection
                     }
                 }
             }
-            
+            std::cout << "listen recv end" << std::endl;
         }
         // listen套接字没有写的环节
         virtual void send() override {}

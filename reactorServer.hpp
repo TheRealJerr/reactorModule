@@ -41,10 +41,13 @@ public:
     void disPatch(int ready_num)
     {
         // 遍历处理事件
+        LOG(LogLevel::INFO) << "事件个数: " << ready_num;
+        
         for(int i = 0; i < ready_num; i++)
         {
             uint32_t event = _events[i].events;
             int fd = _events[i].data.fd;
+            LOG(LogLevel::INFO) << "事件: " << event << " fd: " << fd;
             // 多态不用判断类型，直接调用虚函数
             if(event & EPOLLERR || event & EPOLLHUP)
             {
@@ -54,7 +57,7 @@ public:
             if(isExitInConnection(fd))
             {
                 // 事件存在
-                auto& connection = _connections[fd];
+                auto connection = _connections[fd];
                 if(event & EPOLLIN)
                 {
                     connection->recv();

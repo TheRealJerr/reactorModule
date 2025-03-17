@@ -31,6 +31,6 @@ int main(int argc,char* argv[])
     LOG(LogLevel::INFO) << "ReactorServer start listen on port " << port;
     server->addNewConnection(listen_connection);
 
-
+    server->run();
     return 0;
 }
