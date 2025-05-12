@@ -1,0 +1,1 @@
+[Mon May 12 11:15:20 2025][ERROR][testLog.cpp][9]:error thing12
