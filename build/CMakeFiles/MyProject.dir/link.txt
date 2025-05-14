@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/MyProject.dir/src/testLog.cpp.o -o MyProject 

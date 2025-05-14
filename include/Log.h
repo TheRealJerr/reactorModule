@@ -31,21 +31,25 @@ namespace reactor
         INFO,
     };
 
-    std::string LevelToString(LogLevel level)
+    class LevelToStringHelper
     {
-        switch (level) 
+    public:
+        static std::string LevelToString(LogLevel level)
         {
-            case LogLevel::DEBUG : return "DEBUG"; break;
-            case LogLevel::WARNING : return "WARNING"; break;
-            case LogLevel::CRITIC : return "CRITIC"; break;
+            switch (level) 
+            {
+                case LogLevel::DEBUG : return "DEBUG"; break;
+                case LogLevel::WARNING : return "WARNING"; break;
+                case LogLevel::CRITIC : return "CRITIC"; break;
 
-            case LogLevel::ERROR : return "ERROR"; break;
-            case LogLevel::FATAL : return "FATAL"; break;
-            case LogLevel::INFO : return "INFO"; break;
-            default : return "NOT_KOWN"; break;
-        }    
-    }
+                case LogLevel::ERROR : return "ERROR"; break;
+                case LogLevel::FATAL : return "FATAL"; break;
+                case LogLevel::INFO : return "INFO"; break;
+                default : return "NOT_KOWN"; break;
+            }    
+        }
 
+    };
     class Timer
     {
     public:
@@ -183,7 +187,7 @@ namespace reactor
         LogInfo(LogLevel level,const std::string& filename,int line)
         {
             _ssm << "[" << Timer::getCurTime() << "]" \
-                << "[" << LevelToString(level) << "]" \
+                << "[" << LevelToStringHelper::LevelToString(level) << "]" \
                 << "[" << filename << "]" \
                 << "[" << line << "]:";
         }
