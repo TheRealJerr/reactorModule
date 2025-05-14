@@ -31,17 +31,19 @@ namespace reactor
         // 通过
         while(_is_run)
         {
-            struct epoll_event* events;
+            struct epoll_event* events = nullptr;
             int n;
             if(_epoll.wait(events, &n))
             {
                 // 如果是readfd成功就进行读取，其他就进行写入
-                log(LogLevel::DEBUG) << "epoll模型等待成功";
-                int eventfd = events[n].data.fd;
-                if(eventfd == _readfd)
-                    readReady();
-                else 
-                    eventReady(eventfd);
+                for(int i = 0;i < n;i++)
+                {
+                    int eventfd = events[i].data.fd;
+                    if(eventfd == _readfd)
+                        readReady();
+                    else 
+                        eventReady(eventfd);
+                }
             }
         }
     }
@@ -74,7 +76,25 @@ namespace reactor
         auto con = _cons[eventfd];
         std::string buffer;
         con->readMsg(&buffer);
-        if(_cb) _cb(con,buffer);
+
+        // 读事件就绪，但是没有数据，说明对端关闭了连接
+        if(buffer.empty())
+        {
+            // 我们首先管理连接
+            con->shutDown();
+            // 删除对应的管理信息
+            _epoll.delEvent(eventfd, EPOLLIN);
+            // 删除通信连接映射
+            _cons.erase(eventfd);
+        }
+        //
+        else if(_cb)
+        {
+            log(LogLevel::ERROR) << "有回调函数";
+            _cb(con,buffer); // 有数据并且存在handler
+        }
+        else
+            log(LogLevel::DEBUG) << "没有对应的回调函数";  
     }
 
     

@@ -4,7 +4,7 @@ int main(int argc,char* argv[])
 {
     if(argc != 2)
     {
-        std::cout << "Usage Input:" << argc << std::endl;
+        std::cerr << "Usage input: " << argc << std::endl;
         ::exit(1);
     }
     reactor::Server server(std::stoi(argv[1]));

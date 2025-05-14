@@ -99,7 +99,7 @@ namespace reactor
             log(LogLevel::ERROR) << "fnctl error:" << strerror(errno);
             return;
         }
-
+        log(LogLevel::INFO) << fd << "设置非阻塞成功";
         ::fcntl(fd,F_SETFL,fl | O_NONBLOCK);
     }
 }

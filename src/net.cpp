@@ -104,6 +104,9 @@ namespace reactor
             log(LogLevel::ERROR) << "套接字创建失败";
             ::exit(1);
         }
+        int optval = 1;
+        // 由于我们现在是debug阶段，直接将socket设置成REUSE模式
+        setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     }
 
 
@@ -131,6 +134,13 @@ namespace reactor
                 *msg += buffer;
                 log(LogLevel::DEBUG) << "读取成功" << *msg;
 
+            }
+            else
+            {
+                // n < 0
+                // 读取错误
+                log(LogLevel::ERROR) << "recv error";
+                return;
             }
         }
     }

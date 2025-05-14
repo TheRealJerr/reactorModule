@@ -20,7 +20,7 @@ namespace reactor
 
         void setTimeOut(int timeout) { _timeout = timeout; }
 
-        bool wait(struct epoll_event*,int* n);
+        bool wait(struct epoll_event*&,int* n);
         ~Epoll();
 
 

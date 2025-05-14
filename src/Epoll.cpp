@@ -66,7 +66,7 @@ namespace reactor
         return true;
     }
 
-    bool Epoll::wait(struct epoll_event* events,int* n)
+    bool Epoll::wait(struct epoll_event*& events,int* n)
     {
         int nfs = ::epoll_wait(_epollfd,_epoll_events,MAX_EVENT,_timeout);
         if(nfs < 0)
