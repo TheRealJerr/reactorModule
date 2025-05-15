@@ -7,7 +7,8 @@ namespace reactor
     onMessageCallBack Client::_cb;
     void Client::thraedHandlerMsg()
     {
-        
+        // 将通信连接设置成为阻塞   
+        if(_con.get()) _con->setBlock(); // 将连接设置成为阻塞
         while(true)
         {
             std::string buffer;

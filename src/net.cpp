@@ -81,7 +81,7 @@ namespace reactor
     void Connection::sendMsg(const std::string& msg)
     {
         // 将数据直接进行发送
-        log(LogLevel::DEBUG) << "通过" << _sock_communicate << "发送数据";
+        // log(LogLevel::DEBUG) << "通过" << _sock_communicate << "发送数据";
         int n = ::send(_sock_communicate,msg.c_str(),msg.size(),0);
         if(n < 0) log(LogLevel::ERROR) << "发送失败 " << strerror(errno);
         else log(LogLevel::INFO) << "发送成功";
@@ -91,7 +91,7 @@ namespace reactor
     {
         if(_is_close == false)
         {
-             log(LogLevel::DEBUG) << "关闭了" << _sock_communicate << "套接字";
+            // log(LogLevel::DEBUG) << "关闭了" << _sock_communicate << "套接字";
             ::close(_sock_communicate);
         }
     }
@@ -112,35 +112,65 @@ namespace reactor
 
     void Connection::readMsg(std::string* msg)
     {
-        log(LogLevel::DEBUG) << "通过" << _sock_communicate << "读取数据";
-        char buffer[READ_MAX_SIZE] = { 0 };
-        while(true)
+        // log(LogLevel::DEBUG) << "通过" << _sock_communicate << "读取数据";
+        if(_sock_status == SockStatus::NON_BLOCK)
         {
-            int n = ::recv(_sock_communicate,buffer,READ_MAX_SIZE - 1,0);
-            if(n == EAGAIN || n == EWOULDBLOCK)
+            // 非阻塞IO
+            char buffer[READ_MAX_SIZE] = { 0 };
+            while(true)
             {
-                log(LogLevel::ERROR) << "读取完成";
-                return;
+                int n = ::recv(_sock_communicate,buffer,READ_MAX_SIZE - 1,0);
+                if(n == 0) 
+                {
+                    shutDown(); // 关闭连接
+                    // 
+                    log(LogLevel::INFO) << "对端关闭了连接";
+                    return;
+                }
+                else if(n > 0)
+                {
+                    buffer[n] = 0;
+                    *msg += buffer;
+                }
+                else
+                {
+                    // n < 0
+                    // 读取错误
+                    if(errno == EAGAIN || errno == EWOULDBLOCK)
+                    {
+                        log(LogLevel::INFO) << "读取完毕";
+                        return;
+                    }
+                    else
+                    {
+                        log(LogLevel::ERROR) << "读取出现错误" << strerror(errno);
+                        return;
+                    }
+                }
             }
-            else if(n == 0) 
-            {
-                shutDown(); // 关闭连接
-                // 
-                log(LogLevel::INFO) << "对端关闭了连接";
-            }
-            else if(n > 0)
+        }
+        // 阻塞IO
+        else
+        {
+            char buffer[READ_MAX_SIZE] = { 0 };
+            int n = ::read(_sock_communicate,buffer,READ_MAX_SIZE - 1);
+            if(n > 0)
             {
                 buffer[n] = 0;
                 *msg += buffer;
             }
-            else
+            else if(n == 0)
             {
-                // n < 0
-                // 读取错误
-                log(LogLevel::ERROR) << "recv error";
-                return;
+                log(LogLevel::INFO) << "对端关闭了连接";
+                shutDown();
+            }
+            else 
+            {
+                // 
+                log(LogLevel::ERROR) << "读取出现了错误" << strerror(errno);
             }
         }
+
     }
     Connection::Ptr ClientSocket::connect()
     {
@@ -180,5 +210,17 @@ namespace reactor
 
         return sock_communicate;
     }
+    void Connection::setBlock()
+    {
+        FileCtlClass::setBlock(_sock_communicate);
+        _sock_status = SockStatus::BLOCK;
+    }
+
+    void Connection::setNonBlock()
+    {
+        FileCtlClass::setNonBlock(_sock_communicate);
+        _sock_status = SockStatus::NON_BLOCK;
+    }
+    
 
 }

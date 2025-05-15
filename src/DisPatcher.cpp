@@ -61,6 +61,8 @@ namespace reactor
         _epoll.addEvent(neweventfd, EPOLLIN);
         // 构造新的通信连接
         Connection::Ptr con = std::make_shared<Connection>(neweventfd);
+        // 服务端将通信连接设置成为非阻塞
+        con->setNonBlock();
         // 添加进入hash中
         _cons.insert(std::make_pair(neweventfd,con));
     }

@@ -22,8 +22,12 @@ namespace reactor
         using Ptr = std::shared_ptr<Connection>;
         Connection(int sock_communicate,SockStatus ss = SockStatus::NON_BLOCK) : _sock_communicate(sock_communicate)
         {
-            if(ss == SockStatus::NON_BLOCK) setNonBlock(_sock_communicate);
+            
         }
+
+        void setBlock();  // 将文件描述符设置成阻塞
+
+        void setNonBlock(); // 将文件描述符设置成为非阻塞
 
         void sendMsg(const std::string& msg);
 
@@ -38,6 +42,7 @@ namespace reactor
     private:
         int _sock_communicate;
         bool _is_close = false;
+        SockStatus _sock_status;
     };
 
     using onMessageCallBack = std::function<void(Connection::Ptr,std::string&)>;
@@ -108,6 +113,7 @@ namespace reactor
         uint16_t port() const { return _port; }
         int socket() const { return _sockfd; }
 
+        
     private:
         
         const std::string _ip;

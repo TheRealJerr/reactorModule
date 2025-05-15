@@ -12,6 +12,7 @@ int main(int argc,char* argv[])
     auto on_msg_handler = [](reactor::Connection::Ptr con, std::string& msg)
     {
         std::cout << "收到了:" << msg << std::endl;
+        con->sendMsg("服务端成功收到了请求");
     };
 
     server.setOnMsgCallBack(on_msg_handler);

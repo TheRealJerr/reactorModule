@@ -86,20 +86,32 @@ namespace reactor
     };
 
 
-    inline void setNonBlock(int fd)
+    class FileCtlClass
     {
-        if(fd < 0)
+    public:   
+        static void setNonBlock(int fd)
         {
-            log(LogLevel::ERROR) << "Error fd:" << fd;
-            return;
+            if(fd < 0)
+            {
+                log(LogLevel::ERROR) << "Error fd:" << fd;
+                return;
+            }
+            int fl = ::fcntl(fd,F_GETFL,0);
+            if(fl < 0)
+            {
+                log(LogLevel::ERROR) << "fnctl error:" << strerror(errno);
+                return;
+            }
+            log(LogLevel::INFO) << fd << "设置非阻塞成功";
+            ::fcntl(fd,F_SETFL,fl | O_NONBLOCK);
         }
-        int fl = ::fcntl(fd,F_GETFL,0);
-        if(fl < 0)
-        {
-            log(LogLevel::ERROR) << "fnctl error:" << strerror(errno);
-            return;
+
+        // 将文件描述符设置成为阻塞
+        static int setBlock(int fd) {
+            int flags = fcntl(fd, F_GETFL, 0);  // 获取当前标志
+            if (flags == -1) return -1;          // 错误处理
+            flags &= ~O_NONBLOCK;                // 清除 O_NONBLOCK 位
+            return fcntl(fd, F_SETFL, flags);    // 设置新标志
         }
-        log(LogLevel::INFO) << fd << "设置非阻塞成功";
-        ::fcntl(fd,F_SETFL,fl | O_NONBLOCK);
-    }
+    };
 }
