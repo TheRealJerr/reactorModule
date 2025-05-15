@@ -45,7 +45,11 @@ namespace reactor
         SockStatus _sock_status;
     };
 
+    // 消息处理回调接口
     using onMessageCallBack = std::function<void(Connection::Ptr,std::string&)>;
+
+    // 连接建立回调
+    using onConnectionCallBack = std::function<void(Connection::Ptr)>;
 
     class ServerSocket
     {
@@ -79,6 +83,8 @@ namespace reactor
         void setOnMsgCallBack(const onMessageCallBack& cb) { _on_msg_cb = cb; }
 
         void start();
+
+        
     private:
         uint16_t _port;
         int _sock_listen;

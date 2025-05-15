@@ -14,9 +14,13 @@ int main(int argc,char* argv[])
         std::cout << "收到了:" << msg << std::endl;
         con->sendMsg("服务端成功收到了请求");
     };
-
+    // 连接建立成功的处理的回调函数
+    auto on_con_handler = [](reactor::Connection::Ptr con)
+    {
+        std::cout << "连接建立成功" << std::endl;
+    };
     server.setOnMsgCallBack(on_msg_handler);
-
+    server.setOnConnectionCallBack(on_con_handler);
     server.start();
     return 0;
 }

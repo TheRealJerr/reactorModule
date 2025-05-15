@@ -1,7 +1,29 @@
 #include "../include/Dispatcher.h"
 #include "../include/Log.h"
+#include "../include/Server.h"
+
 namespace reactor
 {
+
+    MainDispatcher::MainDispatcher(int listen_socket) : 
+        _listen_socket(listen_socket)
+        , _is_run(true)
+    {}
+
+    int MainDispatcher::addNewListener()
+    {
+        int pipefd[2] = { 0 };
+        int n = ::pipe(pipefd);
+        if(n < 0)
+        {
+            log(LogLevel::ERROR) << "pipe create fail" << strerror(errno);
+            return -1;
+        }
+        log(LogLevel::DEBUG) << "添加新的管道成功";
+        // 自己存储写端, 返回读端
+        _readers.push_back(pipefd[1]);
+        return pipefd[0];
+    }
     void MainDispatcher::run()
     {
         if(_readers.size() == 0)
@@ -13,6 +35,7 @@ namespace reactor
         while(_is_run)
         {
             int sock_com = Accept(nullptr, _listen_socket);
+            // 连接建立成功了
             // 通过轮询写入
             int n = ::write(_readers[_cur_pos], &sock_com, sizeof(int));
             if(n < 0)
@@ -57,6 +80,7 @@ namespace reactor
             log(LogLevel::ERROR) << "读取失败" << strerror(errno);
             return;
         }
+        // 连接建立成功, 拿到了eventfd
         // 添加进入epoll模型
         _epoll.addEvent(neweventfd, EPOLLIN);
         // 构造新的通信连接
@@ -65,6 +89,8 @@ namespace reactor
         con->setNonBlock();
         // 添加进入hash中
         _cons.insert(std::make_pair(neweventfd,con));
+        //
+        if(_con_cb) _con_cb(con);
     }
 
     void ThreadDispatcher::eventReady(int eventfd)

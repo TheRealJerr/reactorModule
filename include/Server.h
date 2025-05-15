@@ -6,6 +6,10 @@
 
 namespace reactor
 {
+    // 声明类, 解决循环调用
+    class MainDispatcher;
+    class ThreadDispatcher;
+
 
     class Server
     {
@@ -15,11 +19,19 @@ namespace reactor
         void start();
         
         void setOnMsgCallBack(const onMessageCallBack& cb) { _cb = cb; }
+
+        void setOnConnectionCallBack(const onConnectionCallBack& cb) { _con_cb = cb; }
+
+        bool isConnectionCallBackAvailable() { return _con_cb.operator bool(); }
+
+        onConnectionCallBack& connectionCallBack() { return _con_cb; }
+
     private:
         onMessageCallBack _cb;
+        onConnectionCallBack _con_cb;
         uint16_t _port;
         ServerSocket _sock;
-        MainDispatcher _main_dispacher;
-        std::vector<ThreadDispatcher::Ptr> _thread_dispatchers;
+        std::unique_ptr<MainDispatcher> _main_dispacher;
+        std::vector<std::shared_ptr<ThreadDispatcher>> _thread_dispatchers;
     };
 }

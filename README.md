@@ -33,9 +33,13 @@ int main(int argc,char* argv[])
         std::cout << "收到了:" << msg << std::endl;
         con->sendMsg("服务端成功收到了请求");
     };
-    // 设置消息到来的回调函数
+    // 连接建立成功的处理的回调函数
+    auto on_con_handler = [](reactor::Connection::Ptr con)
+    {
+        std::cout << "连接建立成功" << std::endl;
+    };
     server.setOnMsgCallBack(on_msg_handler);
-
+    server.setOnConnectionCallBack(on_con_handler);
     server.start();
     return 0;
 }
@@ -82,7 +86,7 @@ int main(int argc,char* argv[])
 
 **version 1.0:**
 
-目前版本处于1.0, 内部消息采用的原生的std::string, 同时还没有设置connection连接成功的时候的对应回调接口。
+目前版本处于1.0, 内部消息采用的原生的std::string。并没有根据各种数据类型定制化数据包的类型。
 
 
 
