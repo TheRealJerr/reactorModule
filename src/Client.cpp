@@ -10,7 +10,7 @@ namespace reactor
         
         while(true)
         {
-                std::string buffer;
+            std::string buffer;
             _con->readMsg(&buffer);
             if(_cb)
                 _cb(_con,buffer);

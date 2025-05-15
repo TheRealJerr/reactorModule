@@ -132,8 +132,6 @@ namespace reactor
             {
                 buffer[n] = 0;
                 *msg += buffer;
-                log(LogLevel::DEBUG) << "读取成功" << *msg;
-
             }
             else
             {

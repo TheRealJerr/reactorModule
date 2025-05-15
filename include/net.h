@@ -11,13 +11,18 @@ namespace reactor
 
     // 针对连接进行组织
     // 通信连接可以发送数据, 也可以接受数据
+    enum class SockStatus
+    {
+        BLOCK,
+        NON_BLOCK,
+    };
     class Connection
     {
     public:
         using Ptr = std::shared_ptr<Connection>;
-        Connection(int sock_communicate) : _sock_communicate(sock_communicate)
+        Connection(int sock_communicate,SockStatus ss = SockStatus::NON_BLOCK) : _sock_communicate(sock_communicate)
         {
-            setNonBlock(_sock_communicate);
+            if(ss == SockStatus::NON_BLOCK) setNonBlock(_sock_communicate);
         }
 
         void sendMsg(const std::string& msg);
