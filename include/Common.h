@@ -20,6 +20,7 @@
 #include <future>
 #include <fcntl.h>
 #include <unordered_map>
+#include <queue>
 
 namespace reactor
 {
@@ -31,7 +32,6 @@ namespace reactor
 
     // 1. 能够直接通过Sockaddr构建一个struct sockaddr_in
     // 2. 能够通过收到的Sockaddr组织一个SockAddr
-
     class SockAddrInfo
     {
     public:

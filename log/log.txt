@@ -1,0 +1,22 @@
+[Fri May 16 20:00:51 2025][DEBUG][src/net.cpp][36]:bind成功
+[Fri May 16 20:00:51 2025][DEBUG][src/net.cpp][54]:listen成功
+[Fri May 16 20:00:51 2025][DEBUG][src/DisPatcher.cpp][22]:添加新的管道成功
+[Fri May 16 20:00:51 2025][DEBUG][src/DisPatcher.cpp][22]:添加新的管道成功
+[Fri May 16 20:00:51 2025][DEBUG][src/DisPatcher.cpp][22]:添加新的管道成功
+[Fri May 16 20:00:51 2025][DEBUG][src/DisPatcher.cpp][22]:添加新的管道成功
+[Fri May 16 20:01:15 2025][DEBUG][src/net.cpp][209]:得到了通信套接字:17
+[Fri May 16 20:01:15 2025][INFO][src/../include/Common.h][105]:17设置非阻塞成功
+[Fri May 16 20:01:18 2025][INFO][src/net.cpp][141]:读取完毕
+[Fri May 16 20:01:18 2025][ERROR][src/DisPatcher.cpp][121]:有回调函数
+[Fri May 16 20:01:18 2025][INFO][src/net.cpp][87]:发送成功
+[Fri May 16 20:01:22 2025][INFO][src/net.cpp][141]:读取完毕
+[Fri May 16 20:01:22 2025][ERROR][src/DisPatcher.cpp][121]:有回调函数
+[Fri May 16 20:01:22 2025][INFO][src/net.cpp][87]:发送成功
+[Fri May 16 20:01:27 2025][INFO][src/net.cpp][141]:读取完毕
+[Fri May 16 20:01:27 2025][ERROR][src/DisPatcher.cpp][121]:有回调函数
+[Fri May 16 20:01:27 2025][INFO][src/net.cpp][87]:发送成功
+[Fri May 16 20:01:31 2025][INFO][src/net.cpp][141]:读取完毕
+[Fri May 16 20:01:31 2025][ERROR][src/DisPatcher.cpp][121]:有回调函数
+[Fri May 16 20:01:31 2025][INFO][src/net.cpp][87]:发送成功
+[Fri May 16 20:01:34 2025][INFO][src/net.cpp][127]:对端关闭了连接
+[Fri May 16 20:01:34 2025][ERROR][src/Epoll.cpp][48]:epoll del failBad file descriptor

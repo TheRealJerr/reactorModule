@@ -22,7 +22,7 @@ namespace reactor
         using Ptr = std::shared_ptr<Connection>;
         Connection(int sock_communicate,SockStatus ss = SockStatus::NON_BLOCK) : _sock_communicate(sock_communicate)
         {
-            
+            user_count++;
         }
 
         void setBlock();  // 将文件描述符设置成阻塞
@@ -37,12 +37,16 @@ namespace reactor
 
         bool isConnected() const { return _sock_communicate >= 0; }
 
-        ~Connection() { if(_is_close == false) shutDown(); }
+        ~Connection() { if(_is_close == false) shutDown(); user_count--; }
+
+        static size_t getUserCount() { return user_count; } // 获得当前的用户的个数
 
     private:
         int _sock_communicate;
         bool _is_close = false;
         SockStatus _sock_status;
+
+        static inline std::atomic<size_t> user_count = 0;
     };
 
     // 消息处理回调接口

@@ -26,6 +26,7 @@ namespace reactor
 
         onConnectionCallBack& connectionCallBack() { return _con_cb; }
 
+        size_t userCount() { return Connection::getUserCount(); }// 得到当前用户连接的个数
     private:
         onMessageCallBack _cb;
         onConnectionCallBack _con_cb;

@@ -85,8 +85,11 @@ namespace reactor
             // 初始化fstream
             if(!fs::exists(gpath))
             {
-                if(fs::create_directory(gpath) == false) std::cout << gpath << "创建失败" << std::endl;
-                ::exit(1);
+                if(fs::create_directory(gpath) == false) 
+                {
+                    std::cout << gpath << "创建失败" << std::endl;
+                    ::exit(1);
+                }
             }
             const std::string path = gpath / gfilename;
             _ofs.open(path,std::ios::trunc);
@@ -208,10 +211,11 @@ namespace reactor
         std::stringstream _ssm;
     };
 
-#define ENABLE_LOG_FILE() LogTool::setDstFile(DstFile::FILE)
-#define ENABLE_LOG_SCREEN() LogTool::setDstFile(DstFile::SCREEN)
 
 #define log(level) LogInfo(level,__FILE__,__LINE__)
 
 
 }
+
+#define ENABLE_LOG_FILE() reactor::LogTool::setDstFile(reactor::DstFile::FILE)
+#define ENABLE_LOG_SCREEN() reactor::LogTool::setDstFile(reactor::DstFile::SCREEN)
